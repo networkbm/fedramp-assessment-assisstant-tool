@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>FedRAMP Assessment Checklist — Neon Dark (Editable)</title>
+<style>
+  :root{
+    --bg:#0b0f17; --panel:#111827; --panel-2:#0f1623; --text:#e6f1ff; --muted:#a3b1c6;
+    --neon-1:#00e5ff; --neon-2:#7c4dff; --neon-3:#39ff14; --danger:#ff4d6d; --ok:#00ffa3;
+    --shadow:0 0 20px rgba(0, 229, 255, .15);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; padding:0; background:
+      radial-gradient(1200px 600px at 10% -10%, rgba(0,229,255,.06), transparent 40%),
+      radial-gradient(1200px 600px at 110% 10%, rgba(124,77,255,.05), transparent 40%),
+      var(--bg);
+    color:var(--text);
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans";
+    line-height:1.5;
+  }
+  header{padding:24px 20px 10px}
+  .title{display:flex; align-items:center; gap:14px; flex-wrap:wrap}
+  .logo{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--neon-1),var(--neon-2));box-shadow:0 0 18px rgba(124,77,255,.35),0 0 18px rgba(0,229,255,.35) inset}
+  h1{margin:0;font-size:1.35rem;letter-spacing:.4px;text-shadow:0 0 8px rgba(0,229,255,.25)}
+  .subtitle{margin:2px 0 0; color:var(--muted); font-size:.92rem}
+
+  .container{max-width:1240px;margin:0 auto;padding:6px 20px 36px}
+
+  .toolbar{
+    background:linear-gradient(180deg, rgba(17,24,39,.9), rgba(15,22,35,.9));
+    border:1px solid rgba(124,77,255,.3);
+    border-radius:16px; padding:14px; box-shadow:var(--shadow);
+    display:grid; grid-template-columns: 1fr; gap:10px; margin-top:14px;
+  }
+  @media (min-width:1100px){
+    .toolbar{grid-template-columns: 1fr 2fr 1.6fr}
+    .toolbar .rowline{grid-column:1/-1; display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap}
+  }
+  .field{display:flex; flex-direction:column; gap:6px}
+  label{font-size:.88rem; color:var(--muted)}
+  select, textarea, input[type="text"], input[type="file"]{
+    background:var(--panel-2); border:1px solid rgba(0,229,255,.25);
+    color:var(--text); border-radius:10px; padding:10px 12px; outline:none; transition:.2s;
+  }
+  select:focus, textarea:focus, input[type="text"]:focus{border-color:var(--neon-1); box-shadow:0 0 0 3px rgba(0,229,255,.15)}
+  .families{
+    display:flex; flex-wrap:wrap; gap:8px; max-height:92px; overflow:auto; padding:8px;
+    background:var(--panel-2); border:1px solid rgba(124,77,255,.25); border-radius:10px;
+  }
+  .chip{display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border:1px solid rgba(124,77,255,.35); border-radius:999px; background:rgba(124,77,255,.10); cursor:pointer}
+  .chip input{accent-color:var(--neon-2)}
+  .actions{display:flex; gap:8px; align-items:end; flex-wrap:wrap}
+  button{
+    background:linear-gradient(180deg, rgba(0,229,255,.15), rgba(0,229,255,.06));
+    border:1px solid rgba(0,229,255,.45); color:var(--text); padding:10px 14px; border-radius:12px; cursor:pointer; transition:transform .05s, box-shadow .2s; font-weight:600;
+  }
+  button:hover{box-shadow:0 0 16px rgba(0,229,255,.2)} button:active{transform:translateY(1px)}
+  .ghost{background:transparent;border:1px dashed rgba(124,77,255,.45)}
+  .danger{border-color:rgba(255,77,109,.55); background:linear-gradient(180deg, rgba(255,77,109,.18), rgba(255,77,109,.06))}
+  .toggle{display:flex; align-items:center; gap:10px; padding:8px 12px; border-radius:12px; background:rgba(57,255,20,.06); border:1px solid rgba(57,255,20,.35); cursor:pointer}
+  .toggle input{accent-color:var(--neon-3)}
+  .meta{display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:10px; color:var(--muted); font-size:.9rem}
+  .progress{margin-top:16px;background:rgba(124,77,255,.12);border:1px solid rgba(124,77,255,.35);border-radius:12px;height:14px;overflow:hidden;position:relative}
+  .progress .bar{height:100%;width:0%;background:linear-gradient(90deg,var(--neon-1),var(--neon-2),var(--neon-3));box-shadow:0 0 18px rgba(0,229,255,.35);transition:width .25s ease}
+  .progress .label{position:absolute;top:-26px;right:0;font-size:.85rem;color:var(--muted)}
+
+  .list{margin-top:18px;display:grid;gap:12px}
+  .card{
+    background:linear-gradient(180deg, rgba(17,24,39,.82), rgba(10,16,28,.82));
+    border:1px solid rgba(0,229,255,.2); border-radius:14px; padding:12px; display:grid; gap:8px;
+  }
+  .card-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+  .titleline{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .badge{font-size:.78rem;padding:4px 8px;border-radius:999px;background:rgba(0,229,255,.12);border:1px solid rgba(0,229,255,.35);color:var(--text)}
+  .badge.purple{background:rgba(124,77,255,.12);border-color:rgba(124,77,255,.35)}
+  .badge.green{background:rgba(57,255,20,.10);border-color:rgba(57,255,20,.35)}
+  .desc{color:var(--muted);font-size:.95rem}
+  .row{display:grid;gap:10px}
+  @media (min-width:980px){.row{grid-template-columns:1fr 1fr}}
+  .note{width:100%;min-height:68px;resize:vertical}
+  .ctrls{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .tooltip{display:inline-block;position:relative}
+  .tooltip .dot{width:22px;height:22px;border-radius:50%;background:radial-gradient(circle at 30% 30%,var(--neon-1),var(--neon-2));border:1px solid rgba(0,229,255,.45);box-shadow:0 0 12px rgba(0,229,255,.25);cursor:help}
+  .tooltip .bubble{display:none;position:absolute;z-index:10;top:28px;left:0;width:min(520px,90vw);background:var(--panel);border:1px solid rgba(124,77,255,.35);padding:10px 12px;border-radius:10px;box-shadow:var(--shadow);font-size:.9rem}
+  .tooltip:hover .bubble{display:block}
+  .stamp{font-size:.84rem;color:var(--muted)}
+  .complete-line{display:flex;align-items:center;gap:8px;user-select:none}
+  input[type="checkbox"].big{width:20px;height:20px;accent-color:var(--ok)}
+  .footer{margin-top:20px;color:var(--muted);font-size:.85rem;text-align:center}
+  .empty{padding:20px;text-align:center;color:var(--muted);border:1px dashed rgba(0,229,255,.25);border-radius:12px;background:rgba(0,229,255,.03)}
+
+  /* Modal */
+  .modal-backdrop{position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:center; justify-content:center; z-index:50}
+  .modal{width:min(720px,94vw); background:var(--panel); border:1px solid rgba(124,77,255,.35); border-radius:14px; padding:16px; box-shadow:var(--shadow)}
+  .modal h3{margin:0 0 8px 0}
+  .grid2{display:grid; gap:10px}
+  @media (min-width:720px){.grid2{grid-template-columns:1fr 1fr}}
+  .rowline{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+  .pill{font-size:.78rem;padding:4px 8px;border-radius:999px;border:1px dashed rgba(0,229,255,.45);background:rgba(0,229,255,.06)}
+  .small{font-size:.85rem}
+  .linkish{color:var(--neon-1);cursor:pointer}
+</style>
+</head>
+<body>
+  <header>
+    <div class="title">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <h1>FedRAMP Assessment Checklist</h1>
+        <div class="subtitle">Filter by Provider, Family, and Control IDs · Track completion & evidence · Edit and extend your catalog</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <section class="toolbar" aria-label="Filters and actions">
+      <div class="field">
+        <label for="provider">Hosting Provider</label>
+        <select id="provider">
+          <option value="AWS">AWS</option>
+          <option value="Azure">Azure</option>
+          <option value="GCP">GCP</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Control Families</label>
+        <div id="families" class="families" role="group" aria-label="Control families"></div>
+      </div>
+
+      <div class="field">
+        <label for="controlFilter">Control filter (e.g., AC-2, AC-2(1))</label>
+        <input id="controlFilter" type="text" placeholder="Type control IDs — separate multiple with commas; partials OK" />
+        <div class="small" style="color:var(--muted)">Example: <span class="pill">AC-2</span> <span class="pill">AC-2(1)</span> <span class="pill">SC-13</span></div>
+      </div>
+
+      <div class="rowline">
+        <label class="toggle" title="Show only items not completed">
+          <input type="checkbox" id="toggleIncomplete" />
+          Show incomplete only
+        </label>
+        <label class="toggle" title="Show only items missing evidence">
+          <input type="checkbox" id="toggleMissingEvidence" />
+          Show items missing evidence
+        </label>
+        <span style="flex:1"></span>
+        <button id="btnAdd">Add Control</button>
+        <button id="btnImport" class="ghost">Import JSON</button>
+        <button id="btnExportJson" class="ghost">Export JSON</button>
+        <button id="btnLoadNist" class="ghost">Load NIST 800‑53 Rev5 (full)</button>
+        <button id="btnBaseline" class="ghost">Apply Baseline from Control‑ID List</button>
+        <button id="btnSave">Save</button>
+        <button id="btnExport" class="ghost">Export CSV</button>
+        <button id="btnReset" class="danger">Reset Saved Data</button>
+      </div>
+
+      <div class="meta" style="grid-column:1/-1">
+        <span id="countInfo">0 items</span>
+        <span>·</span>
+        <span id="filterInfo">Filters: —</span>
+      </div>
+
+      <div class="progress" style="grid-column:1/-1">
+        <div class="bar" id="progressBar"></div>
+        <div class="label" id="progressLabel">0% complete</div>
+      </div>
+    </section>
+
+    <section id="list" class="list" aria-live="polite" aria-busy="false"></section>
+
+    <div class="footer">Tip: Use <span class="pill">Export JSON</span> to back up or share your catalog. All data is stored locally.</div>
+  </div>
+
+  <!-- Modal for Add/Edit -->
+  <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal">
+      <h3 id="modalTitle">Add Control</h3>
+      <div class="grid2">
+        <div class="field">
+          <label>Control ID (e.g., AC-2, AC-2(1))</label>
+          <input type="text" id="m_control" />
+        </div>
+        <div class="field">
+          <label>Family</label>
+          <input type="text" id="m_family" placeholder="AC, AT, AU, ..."/>
+        </div>
+        <div class="field">
+          <label>Title</label>
+          <input type="text" id="m_title" />
+        </div>
+        <div class="field">
+          <label>Providers (pipe‑separated)</label>
+          <input type="text" id="m_providers" placeholder="AWS|Azure|GCP" />
+        </div>
+        <div class="field" style="grid-column:1/-1">
+          <label>Description</label>
+          <textarea id="m_desc" rows="3"></textarea>
+        </div>
+        <div class="field" style="grid-column:1/-1">
+          <label>Evidence items (one per line, use <code>key: Label</code> or just <code>Label</code>)</label>
+          <textarea id="m_evidence" rows="4" placeholder="policy: Policy attached?
+screenshot: Screenshot captured?
+ticket: Approval/ticket linked?"></textarea>
+        </div>
+        <div class="field">
+          <label>Evidence hint (optional)</label>
+          <input type="text" id="m_hint" />
+        </div>
+        <div class="field">
+          <label>Baseline (optional)</label>
+          <input type="text" id="m_baseline" placeholder="Low|Moderate|High|High+" />
+        </div>
+        <div class="field" style="grid-column:1/-1">
+          <label>Tags (comma‑separated, optional)</label>
+          <input type="text" id="m_tags" placeholder="identity, governance" />
+        </div>
+      </div>
+      <div class="rowline" style="margin-top:10px">
+        <button id="m_save">Save</button>
+        <button id="m_cancel" class="ghost">Cancel</button>
+        <span style="flex:1"></span>
+        <button id="m_delete" class="danger" style="display:none">Delete</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* ===================== DATA MODEL ===================== */
+/** Item shape:
+ *  {
+ *    id: string,
+ *    control: "AC-2" | "AC-2(1)" | ...,
+ *    family: "AC" | "AT" | ... | "SI",
+ *    providers: ["AWS","Azure","GCP"],
+ *    title: string,
+ *    description: string,
+ *    evidenceHint?: string,
+ *    evidenceItems?: [{key:string,label:string}],
+ *  }
+ * STATE per-id: { completed, completedAt, notes, evidenceCollected, evidenceCollectedAt, evidence: { [key]: {done, ts} } }
+ */
+
+const FAMILY_ORDER = ["AC","AT","AU","CA","CM","CP","IA","IR","MA","MP","PE","PL","PS","RA","SA","SC","SI"];
+
+/* Reasonable default evidence per family (auto-added when evidenceItems missing) */
+const FAMILY_DEFAULT_EVIDENCE = {
+  AC: [
+    {key:"policy", label:"Policy/procedures attached"},
+    {key:"review", label:"Access review artifact"},
+    {key:"screenshot", label:"Config/screenshots captured"}
+  ],
+  AT: [
+    {key:"roster", label:"Training roster/completion"},
+    {key:"content", label:"Training content outline"},
+    {key:"screenshot", label:"LMS report screenshot"}
+  ],
+  AU: [
+    {key:"config", label:"Logging config (CloudTrail/Monitor/Logging)"},
+    {key:"retention", label:"Retention/immutability evidence"},
+    {key:"alerting", label:"Alerts/metric filters"}
+  ],
+  CA: [
+    {key:"sap", label:"Security Assessment Plan (SAP)"},
+    {key:"sar", label:"Security Assessment Report (SAR/Results)"},
+    {key:"poam", label:"POA&M entries/aging report"}
+  ],
+  CM: [
+    {key:"baseline", label:"Hardened baseline (IaC/templates)"},
+    {key:"change", label:"Change ticket/approval"},
+    {key:"scan", label:"Config compliance scan"}
+  ],
+  CP: [
+    {key:"plan", label:"BCP/DR plan"},
+    {key:"test", label:"DR test results"},
+    {key:"rto", label:"RTO/RPO evidence"}
+  ],
+  IA: [
+    {key:"idp", label:"IdP settings (MFA/policies)"},
+    {key:"pw", label:"Password policy evidence"},
+    {key:"screenshot", label:"Admin login control screenshot"}
+  ],
+  IR: [
+    {key:"plan", label:"IR plan & procedures"},
+    {key:"tabletop", label:"Tabletop exercise results"},
+    {key:"ticket", label:"Incident record(s)/lessons learned"}
+  ],
+  MA: [
+    {key:"policy", label:"Maintenance policy"},
+    {key:"logs", label:"Maintenance logs"},
+    {key:"remote", label:"Remote maintenance controls"}
+  ],
+  MP: [
+    {key:"sop", label:"Media sanitization SOP"},
+    {key:"cert", label:"Disposal certificates/provider attestations"},
+    {key:"lifecycle", label:"Storage lifecycle config"}
+  ],
+  PE: [
+    {key:"raci", label:"Physical security RACI/shared responsibility"},
+    {key:"badges", label:"Badge/visitor logs/review"},
+    {key:"provider", label:"CSP facility attestations"}
+  ],
+  PL: [
+    {key:"ssp", label:"System Security Plan (SSP)"},
+    {key:"roles", label:"Roles/responsibilities matrix"},
+    {key:"diagrams", label:"Architecture/Boundary diagrams"}
+  ],
+  PS: [
+    {key:"screening", label:"Screening/background checks"},
+    {key:"onoff", label:"On/Offboarding checklist"},
+    {key:"agreements", label:"Signed acknowledgements"}
+  ],
+  RA: [
+    {key:"report", label:"Risk assessment report"},
+    {key:"scan", label:"Vuln scan evidence"},
+    {key:"treatment", label:"Risk treatment decisions"}
+  ],
+  SA: [
+    {key:"sdlc", label:"Secure SDLC evidence (SAST/DAST)"},
+    {key:"supplier", label:"Supplier due diligence"},
+    {key:"contracts", label:"Security addenda/DPAs"}
+  ],
+  SC: [
+    {key:"network", label:"Network segmentation/boundary rules"},
+    {key:"tls", label:"TLS/cipher policy & tests"},
+    {key:"keys", label:"KMS/Key mgmt configuration"}
+  ],
+  SI: [
+    {key:"edr", label:"EDR coverage/telemetry"},
+    {key:"patch", label:"Patch metrics & approvals"},
+    {key:"alerts", label:"Integrity/alerts configuration"}
+  ]
+};
+
+/* Seed catalog — examples only (you’ll replace via loaders/import) */
+let CATALOG = [
+  { id:"ANY_AC_2", control:"AC-2", family:"AC", providers:["AWS","Azure","GCP"],
+    title:"Account Management",
+    description:"Provisioning, deprovisioning, monitoring, and periodic review of accounts.",
+    evidenceHint:"JML tickets; IdP exports; quarterly access reviews."
+  },
+  { id:"ANY_AC_2_1", control:"AC-2(1)", family:"AC", providers:["AWS","Azure","GCP"],
+    title:"Automated Account Management",
+    description:"Automated mechanisms support account lifecycle actions.",
+    evidenceHint:"SCIM/HRIS → IdP sync logs; sample deprovision event."
+  },
+  { id:"AWS_AU_12", control:"AU-12", family:"AU", providers:["AWS"],
+    title:"Audit Record Generation (AWS)",
+    description:"CloudTrail org trail to central S3; logging enabled for key services; alarms configured.",
+    evidenceHint:"CloudTrail config screenshots; S3 bucket SSE‑KMS; metric filter alarms."
+  },
+  { id:"ANY_SC_13", control:"SC-13", family:"SC", providers:["AWS","Azure","GCP"],
+    title:"Cryptographic Protection (TLS)",
+    description:"Strong TLS enforced; cert management; boundary protections.",
+    evidenceHint:"TLS policy/cipher results; cert inventory; test outputs."
+  },
+  { id:"ANY_SC_13_1", control:"SC-13(1)", family:"SC", providers:["AWS","Azure","GCP"],
+    title:"FIPS‑Validated Crypto",
+    description:"Use FIPS‑validated crypto modules for protections where required.",
+    evidenceHint:"Module validation IDs; platform FIPS mode evidence."
+  },
+  { id:"ANY_IR_3", control:"IR-3", family:"IR", providers:["AWS","Azure","GCP"],
+    title:"Incident Response Testing / Exercises",
+    description:"Tabletop/functional exercises with results and corrective actions.",
+    evidenceHint:"Exercise agenda, attendance, findings, tracked actions."
+  }
+];
+
+/* ============ PERSISTENCE ============ */
+const STORAGE_KEY = "fedrampChecklist_v3";
+function loadState(){ try{ const raw = localStorage.getItem(STORAGE_KEY); return raw?JSON.parse(raw):{} }catch{ return {} } }
+function saveState(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(STATE)); }catch{} }
+let STATE = loadState(); // { catalogOverride?:[], items:{[id]:{...}}, filters:{} }
+if (Array.isArray(STATE.catalogOverride)) CATALOG = STATE.catalogOverride;
+
+/* Ensure evidenceItems exist using family defaults (non-destructive) */
+function ensureEvidenceItems(item){
+  if (!Array.isArray(item.evidenceItems) || item.evidenceItems.length===0){
+    const fallback = FAMILY_DEFAULT_EVIDENCE[item.family] || [
+      {key:"policy", label:"Policy/procedures"},
+      {key:"screenshot", label:"Screenshot captured"},
+      {key:"ticket", label:"Ticket/approval linked"}
+    ];
+    item.evidenceItems = fallback.map(e => ({...e}));
+  } else {
+    item.evidenceItems = item.evidenceItems.map((e,idx)=>({
+      key: (e.key && String(e.key).trim()) || `e${idx+1}`,
+      label: e.label ? String(e.label).trim() : `Evidence ${idx+1}`
+    }));
+  }
+}
+
+/* =================== UI ELEMENTS =================== */
+const $provider = document.getElementById('provider');
+const $families = document.getElementById('families');
+const $controlFilter = document.getElementById('controlFilter');
+const $toggleIncomplete = document.getElementById('toggleIncomplete');
+const $toggleMissingEvidence = document.getElementById('toggleMissingEvidence');
+const $btnSave = document.getElementById('btnSave');
+const $btnExport = document.getElementById('btnExport');
+const $btnExportJson = document.getElementById('btnExportJson');
+const $btnImport = document.getElementById('btnImport');
+const $btnAdd = document.getElementById('btnAdd');
+const $btnReset = document.getElementById('btnReset');
+const $btnLoadNist = document.getElementById('btnLoadNist');
+const $btnBaseline = document.getElementById('btnBaseline');
+const $list = document.getElementById('list');
+const $progressBar = document.getElementById('progressBar');
+const $progressLabel = document.getElementById('progressLabel');
+const $countInfo = document.getElementById('countInfo');
+const $filterInfo = document.getElementById('filterInfo');
+
+/* Modal elements */
+const $backdrop = document.getElementById('modalBackdrop');
+const $m_title = document.getElementById('m_title');
+const $m_control = document.getElementById('m_control');
+const $m_family = document.getElementById('m_family');
+const $m_providers = document.getElementById('m_providers');
+const $m_desc = document.getElementById('m_desc');
+const $m_evidence = document.getElementById('m_evidence');
+const $m_hint = document.getElementById('m_hint');
+const $m_baseline = document.getElementById('m_baseline');
+const $m_tags = document.getElementById('m_tags');
+const $m_save = document.getElementById('m_save');
+const $m_cancel = document.getElementById('m_cancel');
+const $m_delete = document.getElementById('m_delete');
+const $modalTitle = document.getElementById('modalTitle');
+let editingId = null;
+
+/* Build family chips */
+function renderFamilyChips(){
+  $families.innerHTML = "";
+  FAMILY_ORDER.forEach(f=>{
+    const id = `fam_${f}`;
+    const label = document.createElement('label');
+    label.className = "chip";
+    label.innerHTML = `<input type="checkbox" id="${id}" value="${f}" /><span>${f}</span>`;
+    $families.appendChild(label);
+  });
+}
+renderFamilyChips();
+
+function selectedFamilies(){
+  return Array.from($families.querySelectorAll('input[type=checkbox]:checked')).map(i=>i.value);
+}
+
+/* Text control filter parsing */
+function parseControlFilter(){
+  const raw = ($controlFilter.value||"").trim();
+  if(!raw) return [];
+  return raw.split(",").map(s=>s.trim()).filter(Boolean);
+}
+
+function itemMatchesFilters(it){
+  if (!$provider.value || !it.providers.includes($provider.value)) return false;
+  const fams = selectedFamilies();
+  if (fams.length && !fams.includes(it.family)) return false;
+
+  const patterns = parseControlFilter();
+  if (patterns.length){
+    const ctrl = (it.control||"").toUpperCase();
+    const ok = patterns.some(p => ctrl.includes(p.toUpperCase()));
+    if(!ok) return false;
+  }
+
+  if ($toggleMissingEvidence.checked){
+    const s = STATE.items?.[it.id] || {};
+    const anyMissing = !s.evidenceCollected || (it.evidenceItems||[]).some(ev=>{
+      const evs = s.evidence?.[ev.key];
+      return !evs || !evs.done;
+    });
+    if(!anyMissing) return false;
+  }
+
+  return true;
+}
+
+function filterCatalog(){
+  const matches = CATALOG.filter(it => itemMatchesFilters(it)).map(it => {
+    ensureEvidenceItems(it);
+    const s = (STATE.items && STATE.items[it.id]) || {completed:false, completedAt:null, notes:"", evidenceCollected:false, evidenceCollectedAt:null, evidence:{}};
+    return {...it, ...s};
+  });
+  return $toggleIncomplete.checked ? matches.filter(x=>!x.completed) : matches;
+}
+
+function fmtDate(dt){ try{ return new Date(dt).toLocaleString(); }catch{ return dt||"" } }
+
+function computeProgress(items){
+  const total = items.length;
+  const done = items.filter(i=>i.completed).length;
+  const pct = total ? Math.round((done/total)*100) : 0;
+  return { total, done, pct };
+}
+
+function render(){
+  const items = filterCatalog();
+  const { total, done, pct } = computeProgress(items);
+
+  $list.setAttribute('aria-busy', 'true');
+  $list.innerHTML = "";
+
+  $countInfo.textContent = `${total} item${total===1?"":"s"} (${done} complete)`;
+  const fams = selectedFamilies();
+  const patterns = parseControlFilter();
+  $filterInfo.textContent = `Provider: ${$provider.value} · Families: ${fams.length?fams.join(", "):"All"} · Controls: ${patterns.length?patterns.join(", "):"All"}`;
+
+  $progressBar.style.width = pct + "%";
+  $progressLabel.textContent = `${pct}% complete`;
+
+  if(!total){
+    const empty = document.createElement('div');
+    empty.className = "empty";
+    empty.textContent = "No items match your current filters.";
+    $list.appendChild(empty);
+    $list.setAttribute('aria-busy', 'false');
+    return;
+  }
+
+  items.forEach(it=>{
+    const card = document.createElement('article');
+    card.className = "card";
+    card.setAttribute('data-id', it.id);
+
+    const header = document.createElement('div');
+    header.className = "card-header";
+
+    const titleline = document.createElement('div');
+    titleline.className = "titleline";
+    const h3 = document.createElement('div');
+    h3.style.fontWeight = "700"; h3.textContent = it.title;
+    const b1 = document.createElement('span'); b1.className = "badge"; b1.textContent = it.family;
+    const b2 = document.createElement('span'); b2.className = "badge purple"; b2.textContent = it.control;
+    const b3 = document.createElement('span'); b3.className = "badge green"; b3.textContent = $provider.value;
+    titleline.append(h3, b1, b2, b3);
+
+    const tip = document.createElement('div');
+    tip.className = "tooltip";
+    tip.innerHTML = `<div class="dot" aria-label="More info"></div>
+                     <div class="bubble"><strong>Description</strong>: ${escapeHtml(it.description)}${it.evidenceHint?`<br/><br/><strong>Evidence hint</strong>: ${escapeHtml(it.evidenceHint)}`:""}</div>`;
+    const editBtn = document.createElement('span');
+    editBtn.className = "linkish small";
+    editBtn.textContent = "Edit";
+    editBtn.addEventListener('click', ()=>openModalForEdit(it.id));
+
+    header.append(titleline, tip);
+    header.appendChild(editBtn);
+
+    const row = document.createElement('div');
+    row.className = "row";
+
+    /* Left: completion & evidence flags */
+    const left = document.createElement('div');
+
+    // Complete checkbox
+    const completeLine = document.createElement('label');
+    completeLine.className = "complete-line"; completeLine.title = "Mark this control complete/incomplete";
+    const cb = document.createElement('input');
+    cb.type = "checkbox"; cb.className = "big"; cb.checked = !!it.completed;
+    const lbl = document.createElement('span'); lbl.textContent = "Complete";
+    const stamp = document.createElement('span'); stamp.className = "stamp";
+    stamp.textContent = it.completed ? `Completed: ${fmtDate(it.completedAt)}` : "Not completed";
+    cb.addEventListener('change', ()=>{
+      const now = new Date().toISOString();
+      const s = getItemState(it.id);
+      s.completed = cb.checked; s.completedAt = cb.checked ? now : null; setItemState(it.id, s);
+      stamp.textContent = cb.checked ? `Completed: ${fmtDate(s.completedAt)}` : "Not completed";
+      renderProgressOnly();
+    });
+    completeLine.append(cb, lbl, stamp);
+
+    // Evidence collected flag
+    const evLine = document.createElement('label');
+    evLine.className = "complete-line"; evLine.title = "Mark evidence/screenshot collected";
+    const ev = document.createElement('input');
+    ev.type = "checkbox"; ev.className = "big"; ev.checked = !!it.evidenceCollected;
+    const evLbl = document.createElement('span'); evLbl.textContent = "Evidence/Screenshot collected";
+    const evStamp = document.createElement('span'); evStamp.className = "stamp";
+    evStamp.textContent = it.evidenceCollected ? `Evidence: ${fmtDate(it.evidenceCollectedAt)}` : "Evidence not marked";
+    ev.addEventListener('change', ()=>{
+      const now = new Date().toISOString();
+      const s = getItemState(it.id);
+      s.evidenceCollected = ev.checked; s.evidenceCollectedAt = ev.checked ? now : null; setItemState(it.id, s);
+      evStamp.textContent = ev.checked ? `Evidence: ${fmtDate(s.evidenceCollectedAt)}` : "Evidence not marked";
+    });
+    evLine.append(ev, evLbl, evStamp);
+
+    // Evidence checklist (per item)
+    const evWrap = document.createElement('div');
+    evWrap.style.marginTop = "8px";
+    const evTitle = document.createElement('div');
+    evTitle.className = "small"; evTitle.style.color = "var(--muted)";
+    evTitle.innerHTML = `<strong>Evidence checklist</strong>`;
+    evWrap.appendChild(evTitle);
+
+    const evList = document.createElement('div');
+    evList.className = "ctrls";
+    (it.evidenceItems||[]).forEach(evi=>{
+      const eLbl = document.createElement('label');
+      eLbl.className = "complete-line";
+      const eCk = document.createElement('input'); eCk.type="checkbox"; eCk.className="big";
+      const cur = (it.evidence && it.evidence[evi.key]) || (STATE.items?.[it.id]?.evidence?.[evi.key]);
+      eCk.checked = !!(cur && cur.done);
+      const txt = document.createElement('span'); txt.textContent = evi.label;
+      const st = document.createElement('span'); st.className="stamp";
+      st.textContent = cur && cur.ts ? `• ${fmtDate(cur.ts)}` : "";
+      eCk.addEventListener('change', ()=>{
+        const s = getItemState(it.id);
+        if (!s.evidence) s.evidence = {};
+        s.evidence[evi.key] = {done: eCk.checked, ts: eCk.checked ? new Date().toISOString() : null};
+        setItemState(it.id, s);
+        st.textContent = eCk.checked ? `• ${fmtDate(s.evidence[evi.key].ts)}` : "";
+      });
+      eLbl.append(eCk, txt, st);
+      evList.appendChild(eLbl);
+    });
+    evWrap.appendChild(evList);
+
+    left.append(completeLine, evLine, evWrap);
+
+    /* Right: notes */
+    const right = document.createElement('div');
+    const notes = document.createElement('textarea');
+    notes.className = "note";
+    notes.placeholder = "Notes, links, evidence locations, owners, dates...";
+    notes.value = it.notes || "";
+    notes.addEventListener('input', debounce(()=>{
+      const s = getItemState(it.id); s.notes = notes.value; setItemState(it.id, s);
+    }, 300));
+    right.append(notes);
+
+    row.append(left, right);
+
+    card.append(header, row);
+    $list.appendChild(card);
+  });
+
+  $list.setAttribute('aria-busy', 'false');
+}
+
+function renderProgressOnly(){
+  const items = filterCatalog();
+  const { total, done, pct } = computeProgress(items);
+  $countInfo.textContent = `${total} item${total===1?"":"s"} (${done} complete)`;
+  $progressBar.style.width = pct + "%";
+  $progressLabel.textContent = `${pct}% complete`;
+}
+
+/* ========= STATE HELPERS ========= */
+function getItemState(id){
+  if (!STATE.items) STATE.items = {};
+  return STATE.items[id] || (STATE.items[id] = {completed:false, completedAt:null, notes:"", evidenceCollected:false, evidenceCollectedAt:null, evidence:{}});
+}
+function setItemState(id, s){
+  if (!STATE.items) STATE.items = {};
+  STATE.items[id] = s;
+  saveState();
+}
+
+/* ===== CSV / JSON ===== */
+function exportCSV(){
+  const items = filterCatalog();
+  const header = ["Provider","Family","Control","Item ID","Title","Description","Status","Completed At","Evidence Flag","Evidence Flag At","Evidence Items","Notes"];
+  const rows = items.map(it=>{
+    const s = STATE.items?.[it.id] || {};
+    const status = s.completed ? "Complete" : "Incomplete";
+    const evFlag = s.evidenceCollected ? "Yes" : "No";
+    const evList = (it.evidenceItems||[]).map(evi=>{
+      const evs = s.evidence?.[evi.key]; const v = evs?.done ? "Yes" : "No";
+      return `${evi.label}:${v}`;
+    }).join(" | ");
+    return [
+      $provider.value, it.family, it.control, it.id,
+      it.title.replaceAll('"','""'),
+      (it.description||"").replaceAll('"','""'),
+      status,
+      s.completedAt ? fmtDate(s.completedAt).replaceAll('"','""') : "",
+      evFlag,
+      s.evidenceCollectedAt ? fmtDate(s.evidenceCollectedAt).replaceAll('"','""') : "",
+      evList.replaceAll('"','""'),
+      (s.notes||"").replaceAll('"','""')
+    ];
+  });
+
+  let csv = header.join(",") + "\n";
+  csv += rows.map(r => r.map(v=>`"${v}"`).join(",")).join("\n");
+
+  const blob = new Blob([csv], {type:"text/csv;charset=utf-8;"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url;
+  const fams = selectedFamilies();
+  a.download = `fedramp_checklist_${$provider.value}_${fams.length?fams.join("-"):"All"}_${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+
+function exportJSON(){
+  const blob = new Blob([JSON.stringify(CATALOG, null, 2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = `fedramp_catalog_${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+
+function importJSON(){
+  const input = document.createElement('input');
+  input.type = "file"; input.accept = "application/json";
+  input.addEventListener('change', ()=>{
+    const file = input.files[0]; if(!file) return;
+    const reader = new FileReader();
+    reader.onload = ()=>{
+      try{
+        const data = JSON.parse(reader.result);
+        if (!Array.isArray(data)) throw new Error("JSON must be an array");
+        data.forEach(it=>ensureEvidenceItems(it));
+        CATALOG = data;
+        if (!STATE) STATE = {};
+        STATE.catalogOverride = CATALOG;
+        saveState();
+        render();
+        alert("Catalog imported successfully.");
+      }catch(e){
+        alert("Invalid JSON: " + e.message);
+      }
+    };
+    reader.readAsText(file);
+  });
+  input.click();
+}
+
+/* ========= Add/Edit/Delete Controls ========= */
+function openModalForAdd(){
+  editingId = null;
+  $modalTitle.textContent = "Add Control";
+  $m_control.value = ""; $m_family.value = ""; $m_title.value = ""; $m_providers.value = "AWS|Azure|GCP";
+  $m_desc.value = ""; $m_hint.value = ""; $m_baseline.value = ""; $m_tags.value = "";
+  $m_evidence.value = "policy: Policy attached?\nscreenshot: Screenshot captured?\nticket: Approval/ticket linked?";
+  $m_delete.style.display = "none";
+  $backdrop.style.display = "flex"; $backdrop.setAttribute('aria-hidden','false');
+}
+function openModalForEdit(id){
+  const it = CATALOG.find(x=>x.id===id); if(!it) return;
+  editingId = id;
+  $modalTitle.textContent = "Edit Control";
+  $m_control.value = it.control || "";
+  $m_family.value = it.family || "";
+  $m_title.value = it.title || "";
+  $m_providers.value = (it.providers||[]).join("|") || "AWS|Azure|GCP";
+  $m_desc.value = it.description || "";
+  $m_hint.value = it.evidenceHint || "";
+  $m_baseline.value = it.baseline || "";
+  $m_tags.value = (it.tags||[]).join(", ");
+  const lines = (it.evidenceItems||[]).map(ev => (ev.key?`${ev.key}: ${ev.label}`:ev.label)).join("\n");
+  $m_evidence.value = lines || "";
+  $m_delete.style.display = "inline-block";
+  $backdrop.style.display = "flex"; $backdrop.setAttribute('aria-hidden','false');
+}
+function closeModal(){ $backdrop.style.display = "none"; $backdrop.setAttribute('aria-hidden','true'); }
+
+function saveModal(){
+  const control = $m_control.value.trim();
+  const family = $m_family.value.trim().toUpperCase();
+  const title = $m_title.value.trim();
+  const providers = $m_providers.value.trim().split("|").map(s=>s.trim()).filter(Boolean);
+  const description = $m_desc.value.trim();
+  const evidenceHint = $m_hint.value.trim();
+  const baseline = $m_baseline.value.trim();
+  const tags = $m_tags.value.split(",").map(s=>s.trim()).filter(Boolean);
+  const evidenceItems = parseEvidenceLines($m_evidence.value);
+
+  if(!control || !family || !title || providers.length===0){
+    alert("Please provide Control ID, Family, Title, and at least one Provider.");
+    return;
+  }
+
+  const makeId = ()=> `${providers.includes("AWS")&&providers.length===1?"AWS":providers.includes("Azure")&&providers.length===1?"AZURE":providers.includes("GCP")&&providers.length===1?"GCP":"ANY"}_${family}_${control.replace(/[^A-Z0-9]/gi,"_")}`.toUpperCase();
+
+  if (editingId){
+    const idx = CATALOG.findIndex(x=>x.id===editingId);
+    if (idx>=0){
+      CATALOG[idx] = {...CATALOG[idx], control, family, title, providers, description, evidenceHint, baseline: baseline||undefined, tags: tags.length?tags:undefined, evidenceItems};
+      ensureEvidenceItems(CATALOG[idx]);
+    }
+  } else {
+    const id = makeId();
+    const item = { id, control, family, title, providers, description, evidenceHint, baseline: baseline||undefined, tags: tags.length?tags:undefined, evidenceItems };
+    ensureEvidenceItems(item);
+    CATALOG.push(item);
+  }
+
+  STATE.catalogOverride = CATALOG;
+  saveState();
+  closeModal();
+  render();
+}
+
+function deleteModal(){
+  if (!editingId) return;
+  if (!confirm("Delete this control from your catalog?")) return;
+  CATALOG = CATALOG.filter(x=>x.id!==editingId);
+  if (STATE.items) delete STATE.items[editingId];
+  STATE.catalogOverride = CATALOG;
+  saveState();
+  closeModal();
+  render();
+}
+
+function parseEvidenceLines(text){
+  const lines = (text||"").split("\n").map(l=>l.trim()).filter(Boolean);
+  const out = lines.map((l,i)=>{
+    if (l.includes(":")){
+      const [k,...rest]=l.split(":"); return {key:k.trim()||`e${i+1}`, label:rest.join(":").trim()||`Evidence ${i+1}`};
+    }
+    return {key:`e${i+1}`, label:l};
+  });
+  return out;
+}
+
+/* ========= Utils ========= */
+function debounce(fn, ms){ let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn.apply(null,args), ms); } }
+function escapeHtml(s){ return (s||"").replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c])) }
+
+/* ========= Events ========= */
+$provider.addEventListener('change', ()=>{ persistFilters(); render(); });
+$families.addEventListener('change', ()=>{ persistFilters(); render(); });
+$controlFilter.addEventListener('input', debounce(()=>{ persistFilters(); render(); }, 200));
+$toggleIncomplete.addEventListener('change', ()=>{ persistFilters(); render(); });
+$toggleMissingEvidence.addEventListener('change', ()=>{ persistFilters(); render(); });
+
+$btnSave.addEventListener('click', ()=> saveState());
+$btnExport.addEventListener('click', exportCSV);
+$btnExportJson.addEventListener('click', exportJSON);
+$btnImport.addEventListener('click', importJSON);
+$btnAdd.addEventListener('click', openModalForAdd);
+$btnReset.addEventListener('click', ()=>{
+  if (confirm("This will clear all saved data (progress + custom catalog) in this browser. Continue?")){
+    localStorage.removeItem(STORAGE_KEY);
+    STATE = {};
+    location.reload();
+  }
+});
+
+$m_cancel.addEventListener('click', closeModal);
+$m_save.addEventListener('click', saveModal);
+$m_delete.addEventListener('click', deleteModal);
+
+function persistFilters(){
+  STATE.filters = {
+    provider: $provider.value,
+    families: selectedFamilies(),
+    incomplete: $toggleIncomplete.checked,
+    missingEvidence: $toggleMissingEvidence.checked,
+    controlFilter: $controlFilter.value
+  };
+  saveState();
+}
+
+(function restoreFilters(){
+  renderFamilyChips();
+  if (STATE.filters){
+    const f = STATE.filters;
+    if (f.provider) $provider.value = f.provider;
+    if (Array.isArray(f.families)) f.families.forEach(code=>{ const box = document.getElementById(`fam_${code}`); if (box) box.checked = true; });
+    if (typeof f.incomplete==="boolean") $toggleIncomplete.checked = f.incomplete;
+    if (typeof f.missingEvidence==="boolean") $toggleMissingEvidence.checked = f.missingEvidence;
+    if (typeof f.controlFilter==="string") $controlFilter.value = f.controlFilter;
+  }
+})();
+
+/* ==================== LOADERS ==================== */
+const NIST_REV5_URL = "https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json";
+
+/* Convert OSCAL control id like "ac-2" or "ac-2.1" -> "AC-2" / "AC-2(1)" */
+function toCtrlId(oscalId){
+  const m = (oscalId||"").match(/^([a-z]{2,3})-(\d+)(?:\.(\d+))?/i);
+  if(!m) return String(oscalId||"").toUpperCase();
+  const fam = m[1].toUpperCase(); const num = m[2]; const enh = m[3] ? `(${parseInt(m[3],10)})` : "";
+  return `${fam}-${num}${enh}`;
+}
+function familyFromOscalId(oscalId){
+  const m = (oscalId||"").match(/^([a-z]{2,3})-/i);
+  return m ? m[1].toUpperCase() : "GEN";
+}
+
+async function loadNistRev5(){
+  if (!confirm("Load the full NIST SP 800-53 Rev 5 catalog (base + enhancements)? This replaces your current catalog. (Export JSON first if needed.)")) return;
+  try{
+    const res = await fetch(NIST_REV5_URL, {cache:"no-store"});
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    const oscal = await res.json();
+    const catalog = [];
+
+    function ensureEvi(it){ ensureEvidenceItems(it); return it; }
+
+    function pushControl(c){
+      const controlId = toCtrlId(c.id);
+      const family = familyFromOscalId(c.id);
+      const title = c.title || controlId;
+
+      // choose a short description
+      let description = "";
+      const parts = Array.isArray(c.parts) ? c.parts : [];
+      const candidate = parts.find(p => /statement|guidance|discussion/i.test(p.name||"")) || parts[0];
+      if(candidate && candidate.prose) description = String(candidate.prose).replace(/\s+/g," ").trim();
+      if(!description) description = title;
+
+      const item = ensureEvi({
+        id: `ANY_${family}_${controlId.replace(/[^A-Z0-9()\-]/g,"_")}`,
+        control: controlId,
+        family: family,
+        providers: ["AWS","Azure","GCP"],
+        title: title,
+        description: description,
+        evidenceHint: "Provide policy/procedure, configuration screenshots, tickets/approvals, and test results as applicable."
+      });
+      catalog.push(item);
+
+      // nested enhancements
+      if(Array.isArray(c.controls)){
+        c.controls.forEach(pushControl);
+      }
+    }
+
+    (oscal.catalog?.groups || []).forEach(g=>{
+      (g.controls || []).forEach(pushControl);
+    });
+
+    if(!catalog.length) throw new Error("No controls parsed from OSCAL JSON.");
+
+    CATALOG = catalog;
+    if(!STATE) STATE = {};
+    STATE.catalogOverride = catalog;
+    saveState();
+    render();
+    alert(`Loaded ${catalog.length} controls from NIST SP 800-53 Rev. 5.`);
+  }catch(err){
+    console.error(err);
+    alert("Failed to load NIST catalog: " + err.message + "\nYou can still use Import JSON.");
+  }
+}
+
+/* Apply a baseline from a provided list of control IDs (JSON array or CSV). */
+function applyBaselineFromList(){
+  const input = document.createElement('input');
+  input.type = "file"; input.accept = ".json,.csv,text/csv,application/json";
+  input.addEventListener('change', ()=>{
+    const file = input.files[0]; if(!file) return;
+    const reader = new FileReader();
+    reader.onload = ()=>{
+      try{
+        let ids = [];
+        const text = reader.result;
+        if (file.name.toLowerCase().endsWith(".json")){
+          const data = JSON.parse(text);
+          if (Array.isArray(data)) ids = data;
+          else if (Array.isArray(data.controls)) ids = data.controls;
+          else throw new Error("JSON must be an array of control IDs or {controls:[...] }");
+        } else {
+          // CSV / plain text: one ID per line or single column
+          ids = text.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+          // also support comma-separated single line
+          if (ids.length===1 && ids[0].includes(",")) ids = ids[0].split(",").map(s=>s.trim());
+        }
+        if (!ids.length) throw new Error("No control IDs found.");
+
+        // Normalize incoming IDs (AC-2 and AC-2(1) forms)
+        const normalized = new Set(ids.map(x=>String(x).toUpperCase()));
+
+        // We prefer to subset the CURRENT catalog if it already includes full controls (so we keep titles/evidence)
+        let base = CATALOG;
+        if (!base.length){
+          alert("Your catalog is empty. Load NIST Rev5 (full) first, then re-apply the baseline.");
+          return;
+        }
+
+        const subset = base.filter(it=> normalized.has(String(it.control).toUpperCase()));
+        if (!subset.length){
+          alert("None of the provided control IDs matched the current catalog. Make sure you loaded NIST Rev5 first.");
+          return;
+        }
+
+        CATALOG = subset;
+        STATE.catalogOverride = CATALOG;
+        saveState();
+        render();
+        alert(`Applied baseline: ${subset.length} controls matched and loaded.`);
+      }catch(e){
+        alert("Could not apply baseline: " + e.message);
+      }
+    };
+    reader.readAsText(file);
+  });
+  input.click();
+}
+
+/* Wire loader buttons */
+$btnLoadNist.addEventListener('click', loadNistRev5);
+$btnBaseline.addEventListener('click', applyBaselineFromList);
+
+/* Initial render */
+render();
+
+</script>
+</body>
+</html>
